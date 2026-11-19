@@ -150,6 +150,21 @@
           <div class="field" style="grid-column:{{ f.span }}"><label>{{ f.label }}</label><input class="sra-input" type="{{ f.type }}" inputMode="{{ f.inputMode }}" value="{{ f.value }}" placeholder="{{ f.placeholder }}" onChange="{{ f.onChange }}"></div>
         </sc-for>
       </div>
+      <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}">
+        <div class="card blueprint" style="padding:12px;gap:10px">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div class="card-kicker">Inspection details · TS 00196 Appendix A</div>
+          <sc-for list="{{ a196Chips }}" as="g" hint-placeholder-count="2">
+            <div class="field"><label>{{ g.label }}</label><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="2"><button class="btn {{ o.cls }}" style="min-height:44px" onClick="{{ o.pick }}">{{ o.label }}</button></sc-for></div></div>
+          </sc-for>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+            <sc-for list="{{ a196Fields }}" as="f" hint-placeholder-count="4">
+              <div class="field" style="grid-column:{{ f.span }}"><label>{{ f.label }}</label><input class="sra-input" type="{{ f.type }}" value="{{ f.value }}" placeholder="{{ f.placeholder }}" onChange="{{ f.onChange }}"></div>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;opacity:.7">These print in the Slope Inspection Report. Reviewed by comes from the Check step.</div>
+        </div>
+      </sc-if>
       <div class="card blueprint" style="padding:12px;gap:10px">
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         <div style="display:flex;justify-content:space-between;align-items:center"><div class="card-kicker">GPS · GDA2020 → MGA2020</div>
@@ -648,6 +663,7 @@
           <input class="sra-input" placeholder="Describe, e.g. Small rockfalls behind mesh" value="{{ hz.text }}" onChange="{{ setHzText }}">
         </div>
 
+        <sc-if value="{{ isV4 }}" hint-placeholder-val="{{ true }}">
         <!-- SRA Summary: elements at risk, scale dimensions, trigger -->
         <div class="card blueprint" style="padding:12px;gap:12px">
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -846,6 +862,62 @@
             <div style="font-size:12px;opacity:.7;padding-bottom:12px">Hint from sections B–K: <b>{{ attrScore }}</b></div>
           </div>
         </div>
+        </sc-if>
+
+        <!-- ===== TS 00196 Slope Risk Management: per-hazard safety risk ===== -->
+        <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ n6Cards }}" as="cd" hint-placeholder-count="3">
+            <div class="card blueprint" style="padding:12px;gap:10px">
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap"><div class="card-kicker">{{ cd.kicker }}</div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ cd.refs }}" as="r" hint-placeholder-count="1"><button class="btn btn-ghost" style="min-height:40px;font-family:var(--font-body);font-weight:400;font-size:12px;text-decoration:underline;text-underline-offset:3px" onClick="{{ r.open }}">{{ r.label }}</button></sc-for></div></div>
+              <sc-for list="{{ cd.groups }}" as="g" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-if value="{{ g.hasTitle }}" hint-placeholder-val="{{ true }}"><div style="font-family:var(--font-heading);font-weight:600;font-size:16px">{{ g.title }}</div></sc-if>
+                  <sc-if value="{{ g.isChips }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3"><button class="btn {{ o.cls }}" style="min-height:44px" aria-pressed="{{ o.pressed }}" onClick="{{ o.pick }}">{{ o.label }}<sup style="font-size:10px">{{ o.sup }}</sup></button></sc-for></div></sc-if>
+                  <sc-if value="{{ g.isCards }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" aria-pressed="{{ o.pressed }}" style="min-height:48px;padding:8px 12px;display:flex;gap:12px;align-items:center;text-align:left;font:inherit;cursor:pointer;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }}"><span style="font-family:var(--font-heading);font-weight:600;font-size:16px;min-width:52px;flex:none">{{ o.label }}<sup style="font-size:10px">{{ o.sup }}</sup></span><span style="font-size:13px;line-height:1.35">{{ o.hint }}</span></button></sc-for></div></sc-if>
+                  <sc-if value="{{ g.isInput }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:4px;font-size:13px">{{ g.label }}<input class="sra-input" inputMode="{{ g.im }}" value="{{ g.value }}" placeholder="{{ g.ph }}" onChange="{{ g.onChange }}"></label></sc-if>
+                  <sc-if value="{{ g.isText }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;line-height:1.45;padding:8px 10px;border:1px solid var(--color-divider);background:var(--color-surface);white-space:pre-wrap">{{ g.text }}</div></sc-if>
+                  <sc-if value="{{ g.isAction }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" style="min-height:44px;align-self:flex-start" onClick="{{ g.act }}">{{ g.actLabel }}</button></sc-if>
+                  <sc-if value="{{ g.hasHint }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;line-height:1.4;color:color-mix(in srgb,var(--color-text) 78%,transparent)">{{ g.hint }}</div></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+          <div class="card blueprint" style="padding:12px;gap:10px;background:var(--color-surface)">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <div class="card-kicker">H{{ hz.n }} · safety risk (Table 44)</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px">
+              <sc-for list="{{ n6Derived }}" as="d" hint-placeholder-count="4">
+                <button onClick="{{ d.open }}" style="border:1px solid var(--color-divider);background:transparent;color:inherit;font:inherit;cursor:pointer;text-align:left;padding:8px;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px">{{ d.label }}</span><span style="font-family:var(--font-heading);font-weight:600;font-size:20px">{{ d.value }}</span><span style="font-size:11px">{{ d.sub }}</span></button>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;background:{{ n6Bg }};color:{{ n6Fg }}">
+              <button onClick="{{ openN44 }}" style="background:transparent;border:0;color:inherit;font:inherit;font-size:13px;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px">Risk rating · {{ n6Level }}</button><span style="font-family:var(--font-heading);font-weight:700;font-size:28px">{{ n6Rating }}</span>
+            </div>
+            <div style="font-size:13px;line-height:1.45">{{ n6Resp }}</div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <!-- TS 00196: overall slope risk (Section 11) -->
+      <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}">
+        <div class="card blueprint" style="padding:12px;gap:10px">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div class="card-kicker">Overall slope risk rating · Section 11</div><button class="btn btn-ghost" style="min-height:40px;font-family:var(--font-body);font-weight:400;font-size:12px;text-decoration:underline" onClick="{{ openN19 }}">Tables 18–19</button></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;background:{{ ovBg }};color:{{ ovFg }}"><span style="font-size:13px">{{ ovLine }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:28px">{{ ovRating }}</span></div>
+          <div style="font-size:13px;line-height:1.45">{{ ovResp }}</div>
+          <button class="btn btn-secondary" style="min-height:44px;align-self:flex-start" onClick="{{ toggleNs }}">{{ nsToggleLabel }}</button>
+          <sc-if value="{{ nsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;line-height:1.45">Non-safety risks are normally rated by the asset custodian or delegated asset steward (Section 9). Record them here only if they were provided. The overall rating is the worst of all.</div>
+            <sc-for list="{{ nsRows }}" as="r" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:6px 0;border-top:1px solid var(--color-divider)">
+                <span style="font-size:13px;font-weight:600">{{ r.label }}</span>
+                <div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="4"><button class="btn {{ o.cls }}" style="min-height:40px;min-width:44px;padding:0 8px" aria-label="{{ o.aria }}" onClick="{{ o.pick }}">{{ o.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </sc-if>
+        </div>
       </sc-if>
     </div>
   </sc-if>
@@ -859,6 +931,7 @@
           <button class="btn btn-secondary" style="flex:none;min-height:44px" onClick="{{ goCheck }}">View comments</button>
         </div>
       </sc-if>
+      <sc-if value="{{ isV4 }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;gap:14px;padding:14px;background:{{ slopeArlBg }};color:{{ slopeArlFg }}">
         <div style="font-family:var(--font-heading);font-weight:600;font-size:44px;line-height:1">{{ slopeArl }}</div>
         <div><div style="font-size:13px;opacity:.9">Governing assessed risk level</div><div style="font-size:13px;opacity:.9">{{ slopeArlNote }}</div></div>
@@ -878,6 +951,28 @@
           </div>
         </sc-for>
       </div>
+      </sc-if>
+      <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px;background:{{ ovBg }};color:{{ ovFg }}">
+          <div style="font-family:var(--font-heading);font-weight:600;font-size:44px;line-height:1">{{ ovRating }}</div>
+          <div><div style="font-size:13px;opacity:.9">Overall slope risk rating · {{ ovLevel }}</div><div style="font-size:13px;opacity:.9">{{ ovLine }}</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid var(--color-divider)">
+          <sc-for list="{{ rr196 }}" as="r" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid color-mix(in srgb,var(--color-text) 8%,transparent)">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;min-width:0">
+                <span style="font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b style="font-family:var(--font-heading);font-size:15px">{{ r.n }}</b> · {{ r.type }}</span>
+                <span style="flex:none;font-family:var(--font-heading);font-weight:600;font-size:15px;padding:2px 10px;background:{{ r.bg }};color:{{ r.fg }}">{{ r.rating }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;font-size:12px;font-variant-numeric:tabular-nums">
+                <sc-for list="{{ r.codes }}" as="c" hint-placeholder-count="6">
+                  <div style="border:1px solid var(--color-divider);padding:3px 0;text-align:center;min-width:0;overflow:hidden"><div style="font-size:9px;letter-spacing:.06em;opacity:.6">{{ c.k }}</div><div style="font-family:var(--font-heading);font-weight:600;font-size:13px;white-space:nowrap">{{ c.v }}</div></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
       <sc-if value="{{ hasMissing }}" hint-placeholder-val="{{ false }}">
         <div style="border:1px solid var(--color-accent);padding:10px 12px;font-size:13px"><b>Incomplete:</b> {{ missingList }}</div>
       </sc-if>
@@ -887,6 +982,7 @@
           <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid color-mix(in srgb,var(--color-text) 8%,transparent);font-size:13px"><span style="font-family:ui-monospace,monospace">{{ f.name }}</span><span style="opacity:.7;text-align:right">{{ f.caption }}</span></div>
         </sc-for>
       </div>
+      <sc-if value="{{ isV4 }}" hint-placeholder-val="{{ true }}">
       <div class="card blueprint" style="padding:12px;gap:10px">
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         <div class="card-kicker">Reports · SRA Summary page 3 (up to 10)</div>
@@ -911,8 +1007,16 @@
       </div>
       <button class="btn btn-secondary" style="min-height:48px" onClick="{{ downloadSummary }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>{{ summaryLabel }}</button>
       <button class="btn btn-secondary" style="min-height:48px" onClick="{{ downloadSD }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>{{ sdLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}">
+        <button class="btn btn-secondary" style="min-height:48px" onClick="{{ downloadRR }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>{{ rrLabel }}</button>
+        <button class="btn btn-secondary" style="min-height:48px" onClick="{{ downloadSIR }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>{{ sirLabel }}</button>
+      </sc-if>
       <button class="btn btn-primary" style="min-height:56px;font-size:16px" onClick="{{ downloadZip }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>{{ zipLabel }}</button>
+      <sc-if value="{{ isV4 }}" hint-placeholder-val="{{ true }}">
       <div style="font-size:12px;opacity:.7">RA.xlsx is the SRA Summary Report v3.12 (3 pages, same cells and print layout as the Checker's SRA Summary sheet), filled from everything entered here. SD.pdf is the original 9-page Slope Description Record v4 with every tick, value, sketch and score printed in place. RA.csv stays for RSMS. Names follow NNNNNN_YYYYMMDD_*.</div>
+      </sc-if>
+      <sc-if value="{{ is196 }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;opacity:.7">SIR.pdf is the Slope Inspection Report with the contents listed in TS 00196 Appendix A: inspection details, overall risk rating and minimum response, the slope hazard and risk register, then the Slope Description Record, sketches and photos. RR.xlsx is the same register as a spreadsheet. Names follow NNNNNN_YYYYMMDD_*.</div></sc-if>
     </div>
   </sc-if>
 
@@ -1178,7 +1282,7 @@ class Component extends DCLogic {
   STANDARDS = {
     TS02136: { code: 'TS 02136 · Guide v4', short: 'Guide to Slope Risk Analysis v4', title: 'Guide to Slope Risk Analysis, Version 4', modes: 'Roads', ready: true,
       desc: 'TfNSW road method (C-G-001, Issue 4 2014): Slope Description Record, P(d) × P(t) likelihood, consequence and ARL1–ARL5 assessed risk level, RSMS exports.' },
-    TS00196: { code: 'TS 00196 · 2026', short: 'Slope Risk Management (2026)', title: 'Slope Risk Management', modes: 'All modes: road, rail, light rail, metro, active transport', ready: false,
+    TS00196: { code: 'TS 00196 · 2026', short: 'Slope Risk Management (2026)', title: 'Slope Risk Management', modes: 'All modes: road, rail, light rail, metro, active transport', ready: true,
       desc: 'TfNSW standard effective 15 June 2026: L1–L7 likelihood, Cq0–Cq6 safety consequence by interaction type, TERM risk rating A to D2, hazard and risk register.' },
     TS01637: { code: 'TS 01637 · Rail', short: 'Geotechnical Risk Assessment (Rail)', title: 'Geotechnical Risk Assessment and Hazard Management', modes: 'Rail', ready: false,
       desc: 'TfNSW rail method (T HR CI 12100 ST): likelihood F1–F6 × consequence C1–C6, risk ranking A to D with priorities, protected risk, surveillance and target actions.' },
@@ -1186,6 +1290,8 @@ class Component extends DCLogic {
   KEY = 'nsw_sra_state_v1';  // own key: this app shares the github.io origin with the original Slope Risk App
   STEPS = [['A','Location'],['B','Geometry'],['C1','Plan sketch'],['C2','Section'],['D–L','Description'],['P','Photos'],['RA','Risk analysis'],['↓','Export'],['✓','Check']];
   ARL_BG = { ARL1:'var(--color-accent-900)', ARL2:'var(--color-accent-700)', ARL3:'var(--color-accent-500)', ARL4:'var(--color-accent-300)', ARL5:'var(--color-accent-100)' };
+  N6_BG = { A: 'var(--color-accent-900)', B1: 'var(--color-accent-700)', B2: 'var(--color-accent-700)', C1: 'var(--color-accent-500)', C2: 'var(--color-accent-500)', D1: 'var(--color-accent-300)', D2: 'var(--color-accent-100)' };
+  N6_FG = { A: '#fff', B1: '#fff', B2: '#fff', C1: '#fff', C2: '#fff', D1: '#1d1f20', D2: '#1d1f20' };
   ARL_FG = { ARL1:'#fff', ARL2:'#fff', ARL3:'#fff', ARL4:'#1d1f20', ARL5:'#1d1f20' };
   pad = { drawing: false, last: null, el: null };
 
@@ -1194,7 +1300,7 @@ class Component extends DCLogic {
     this._flushNow = () => { clearTimeout(this._sv); this.flush(); }; window.addEventListener('pagehide', this._flushNow); document.addEventListener('visibilitychange', this._flushNow);
     const boot = async () => {
       if (!(window.SRA_T && window.SRA_G && window.SRA_R && window.SRA_X && window.SD_FORM && window.SRA_SK)) { this._t = setTimeout(boot, 60); return; }
-      this.SK = window.SRA_SK; this.SD = window.SD_FORM; this.T = window.SRA_T; this.G = window.SRA_G; this.REF = window.SRA_R.REF; this.readExif = window.SRA_X.readExif;
+      this.SK = window.SRA_SK; this.SD = window.SD_FORM; this.T = window.SRA_T; this.G = window.SRA_G; this.REF = { ...window.SRA_R.REF, ...(window.TS196?.REF || {}) }; this.readExif = window.SRA_X.readExif;
       let data = await this.loadData();
       try { navigator.storage?.persist?.(); } catch (e) {}
       if (!data) data = this.demoData();
@@ -1417,7 +1523,8 @@ class Component extends DCLogic {
     const f = (suf, cap) => ({ name: T.fileName(site, date, suf), caption: cap });
     const list = [];
     (s.photos || []).forEach((p, i) => list.push(f(`P${String(i + 1).padStart(2, '0')}.JPG`, p.caption || 'Photograph')));
-    list.push(f('RA.xlsx', 'SRA Summary Report v3.12'), f('RA.csv', 'Risk Analysis Sheet (RSMS)'));
+    if (this.stdOfSlope(s) === 'TS00196') list.push(f('SIR.pdf', 'Slope Inspection Report (TS 00196 Appendix A) with SD record, sketches and photos'), f('RR.xlsx', 'Slope hazard and risk register'));
+    else list.push(f('RA.xlsx', 'SRA Summary Report v3.12'), f('RA.csv', 'Risk Analysis Sheet (RSMS)'));
     this.sheetFiles(s).forEach(x => list.push(f(x.suf, x.caption)));
     const xtra = this.sheetFiles(s).filter(x => x.n > 1 && (x.k === 'S01' || x.k === 'S02')).length;
     list.push(f('SD.pdf', `Slope Description Record v4 (${9 + xtra + Math.ceil((s.photos || []).filter(p => p?.src).length / 8)} pages)`));
@@ -1633,8 +1740,9 @@ class Component extends DCLogic {
       if (!JSZip) { await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); }); JSZip = window.JSZip; }
       if (!JSZip) throw new Error('ZIP library unavailable offline — connect once to cache it.');
       const zip = new JSZip(); const site = s.A.siteNo || '000000'; const date = (s.A.date || '').replace(/-/g, '') || this.today(); const fn = suf => this.T.fileName(site, date, suf);
-      zip.file(fn('RA.csv'), this.raCsv(s));
-      zip.file(fn('RA.xlsx'), await window.SRA_SUMMARY.build(JSZip, this.summaryCells(s, this.cur().p), s.A.siteNo));
+      if (this.stdOfSlope(s) === 'TS00196') { zip.file(fn('SIR.pdf'), await this.sirBlob(s, this.cur().p)); zip.file(fn('RR.xlsx'), await this.rrBlob(s, this.cur().p)); }
+      else { zip.file(fn('RA.csv'), this.raCsv(s));
+      zip.file(fn('RA.xlsx'), await window.SRA_SUMMARY.build(JSZip, this.summaryCells(s, this.cur().p), s.A.siteNo)); }
       zip.file(fn('SD.pdf'), await this.sdPdf(s));
       const b64 = u => u.split(',')[1];
       (s.photos || []).forEach((p, i) => { if (p.src) zip.file(fn(`P${String(i + 1).padStart(2, '0')}.JPG`), b64(p.src), { base64: true }); });
@@ -1643,6 +1751,52 @@ class Component extends DCLogic {
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${site}_${date}.zip`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     } catch (e) { console.error(e); alert('Could not build ZIP: ' + e.message); }
     this.setState({ zipBusy: false });
+  }
+
+  // ---------- TS 00196 outputs ----------
+  stdOfSlope(s) { const d = this.state.data; const pr = (d?.projects || []).find(q => (q.slopes || []).some(x => x.id === s?.id)); return pr?.std || 'TS02136'; }
+  ctx196(s, x) { const A = s?.A || {}; return { speed: (x?.n6?.speed ?? '') !== '' ? +x.n6.speed : +A.speed, length: x?.n6?.len ?? '' }; }
+  overall196(s) {
+    const N = window.TS196; const hs = s.hazards || []; const safety = hs.map(x => N.compute(x, this.ctx196(s, x)).rating); const ns = s.n6ns || {};
+    const nonSafety = N.NONSAFETY.filter(k => ns[k]).map(k => [k, ns[k]]); const rating = N.worst([...safety, ...nonSafety.map(r => r[1])]); const ws = N.worst(safety); const t = N.termOf(rating);
+    return { rating, safety: ws, level: t ? `${t.level} (${t.tol})` : '', resp: t?.resp || '', review: t?.review || '', nonSafety,
+      line: rating ? `Worst of ${hs.length} hazard${hs.length === 1 ? '' : 's'}${nonSafety.length ? ` and ${nonSafety.length} non-safety rating${nonSafety.length === 1 ? '' : 's'}` : ''}${ws && ws !== rating ? ` (safety rating ${ws})` : ''}. Review: ${t.review}.` : '' };
+  }
+  reg196(s) {
+    const N = window.TS196; const P = N.fmtP;
+    return (s.hazards || []).map(h => { const n = h.n6 || {}; const c = N.compute(h, this.ctx196(s, h)); const md = N.MODES.find(m => m.k === n.mode); const xt = (N.X_TYPES[n.mode] || []).find(x => x.k === n.X);
+      const scale = [n.S, n.D, n.M].filter(Boolean).join(' / ') + (n.mode === 'road' && n.X === 'X1' && n.debris && n.debris !== 'block' ? ` (${n.debris === 'mixed' ? 'loose / wet mixed soil and rock' : 'small rock <0.1 m'})` : '');
+      const ptx = (n.ptx || []).filter(v => v != null && v !== '');
+      const PtTxt = h.pt == null ? '—' : ptx.length ? `${P(+h.pt)} × ${ptx.map(v => P(+v)).join(' × ')} = ${P(c.pt)}` : P(c.pt);
+      const t = c.term;
+      return { Hazard: `H${h.n}`, 'Hazard type': (h.text || '').trim() || h.mech || '', 'Failure mechanism': h.mech || '', 'Failure trigger': h.trigger || '', 'Element at risk': md?.label || '', 'Interaction type': xt ? `${xt.k} – ${xt.hint}` : '',
+        'Hazard scale (S / D / M)': scale, 'Velocity (R)': n.R || '', 'Temporal probability (T)': n.T || '', Pd: c.pd ?? '', PdTxt: P(c.pd), 'Pt (Pt1×Pt2×…)': c.pt ?? '', PtTxt, 'Pt method / basis': n.ptBasis || '',
+        'Pd × Pt': c.p ?? '', 'Likelihood (L)': c.L || '', 'Safety consequence (Cq)': c.Cq ? `${c.Cq} ${(N.CQ.find(q => q[0] === c.Cq) || [])[1] || ''}` : '',
+        'Cq basis': [...(c.why || []), c.cqOvr ? `Override from ${c.CqAuto || '—'}: ${n.cqWhy || 'no reason given'}` : ''].filter(Boolean).join('; '),
+        'Safety risk rating': c.rating || '', 'TERM level': t ? `${t.level} – ${t.tol}` : '', 'Indicative remediation cost': n.cost || '', 'Risk management / remediation options': n.options || '' }; });
+  }
+  meta196(s, p) {
+    const A = s.A || {}, B = s.B || {}; const g = this.G?.toMGA2020(+A.lat1, +A.lon1);
+    return [['Asset / slope identification no.', A.siteNo], ['Inspection date', A.date], ['Previous inspection date', A.prevInsp], ['Reason for inspection', A.inspReason],
+      ['Inspected by', [A.completedBy || p?.assessor, p?.org].filter(Boolean).join(', ')], ['Reviewed by', [s.checkedBy, s.checkedDate].filter(Boolean).join(' · ')],
+      ['Project', p?.title], ['Client', p?.client], ['Road / rail line', [A.roadNo, A.lineName].filter(Boolean).join(' · ')], ['Location (chainage / ROADLOC)', [A.startLink, A.startDist !== '' && A.startDist != null ? `${A.startDist}–${A.finishDist ?? ''} km` : '', A.side ? `${A.side} side` : ''].filter(Boolean).join(' · ')],
+      ['Nearest town / suburb / station', A.nearest || A.locality], ['Slope type', A.slopeType], ['Slope length (m)', A.length || B.lengthCovered], ['Maximum height (m)', B.overallH], ['Average angle (°)', B.overallA],
+      ['GPS start (GDA2020)', A.lat1 ? `${A.lat1}, ${A.lon1}${g ? ` · MGA2020 zone ${g.zone} E ${Math.round(g.easting)} N ${Math.round(g.northing)}` : ''}` : ''], ['GPS finish (GDA2020)', A.lat2 ? `${A.lat2}, ${A.lon2}` : ''],
+      ['Posted / line speed (km/h)', A.speed], ['AADT', A.aadt ? `${A.aadt}${A.year ? ` (${A.year})` : ''}` : ''], ['Weather', A.weather], ['Reference documents', A.refDocs]];
+  }
+  async rrBlob(s, p) { const JSZip = await this.loadZipLib(); return window.TS196R.buildRegisterXlsx(JSZip, this.meta196(s, p), this.reg196(s)); }
+  async sirBlob(s, p) {
+    const A = s.A || {}; const ov = this.overall196(s); const sd = await this.sdPdf(s); const sdBytes = new Uint8Array(await sd.arrayBuffer());
+    const site = [['Description', this.descrOut(s)], ['Material', this.guideMat(s)], ['Existing measures', s.existingMeasures], ['Further investigation', s.furtherInv], ['Comments', this.commentsOut(s)]].filter(r => (r[1] || '').toString().trim());
+    const bytes = await window.TS196R.buildSIR(window.PDFLib, { title: `Slope ${A.siteNo || ''}${A.locality ? ' · ' + A.locality : ''}`, subtitle: [p?.title, A.date].filter(Boolean).join(' · '), meta: this.meta196(s, p).map(([k, v]) => [k, v == null ? '' : String(v)]), rows: this.reg196(s), overall: ov, nonSafety: ov.nonSafety, siteText: site, sdBytes });
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+  async dl196(kind) {
+    const { s, p } = this.cur(); const busy = kind + 'Busy'; if (!s || this.state[busy]) return; this.setState({ [busy]: true });
+    try { const date = (s.A.date || '').replace(/-/g, '') || this.today(); const blob = kind === 'rr' ? await this.rrBlob(s, p) : await this.sirBlob(s, p);
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = this.T.fileName(s.A.siteNo || '000000', date, kind === 'rr' ? 'RR.xlsx' : 'SIR.pdf'); a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    } catch (e) { console.error(e); alert('Could not build the file: ' + e.message); }
+    this.setState({ [busy]: false });
   }
 
   renderVals() {
@@ -1658,7 +1812,7 @@ class Component extends DCLogic {
       refOpen: !!st.ref && !!this.REF?.[st.ref], closeRef: () => this.setState({ ref: null }), termOpen: !!st.termOpen, openTerm: () => this.setState({ termOpen: true }), closeTerm: () => this.setState({ termOpen: false }), refTitle: '', refNote: '', refCols: [], refRows: [],
       measOn: false, measModes: [], measFields: [], measDirs: [], secList: [], tbMeas: {}, tbMove: {}, skLgChips: [], skLgHasChips: false,
       dlgOpen: false, skPrevOpen: false, isNatural: false, natSideOpts: [], structSideOpts: [], e1TypeOpts: [], sdIsE1: false, exKw: [], futKw: [], sheetTabs: [], holdOpen: false, matMulti: false, matDomOpts: [], dlgUnits: [], dlgHasUnits: false, dlgChips: [], dlgFields: [], dlgHasChips: false, lenLines: [], hnList: [], hnMechs: [], hnCats: [], skLegend: [], skLegendHz: [],
-      projects: [], slopes: [], steps: [], photos: [], sketchImageCss: 'none', sketchImageSrc: '', capSrc: '', sketchHasImage: false, sketchNoImage: true, sketchMore: [], sketchHasMore: false, drawPages: [], drawPageNoteOn: false, padSaveLabel: 'Save', revHere: [], revHereOn: false, revItems: [], revAboutOpts: [], revOpenAny: false, canMarkChecked: false, checkBlocked: false, chkSketches: [], chkHasSketch: false, chkNoSketch: true, skPrevTitle: '', skPrevW: '100%', skPrevZoomLabel: 'Zoom', sketchMoreNote: '', sketchMoreCamLabel: 'Take photo', stepA: false, stepB: false, stepSketch: false, stepDesc: false, stepPhotos: false, stepRisk: false, stepExport: false, stepCheck: false,
+      projects: [], slopes: [], steps: [], photos: [], sketchImageCss: 'none', sketchImageSrc: '', capSrc: '', sketchHasImage: false, sketchNoImage: true, sketchMore: [], sketchHasMore: false, is196: false, isV4: true, rr196: [], ovLevel: '', a196Chips: [], a196Fields: [], n6Cards: [], n6Derived: [], nsRows: [], nsOpen: false, drawPages: [], drawPageNoteOn: false, padSaveLabel: 'Save', revHere: [], revHereOn: false, revItems: [], revAboutOpts: [], revOpenAny: false, canMarkChecked: false, checkBlocked: false, chkSketches: [], chkHasSketch: false, chkNoSketch: true, skPrevTitle: '', skPrevW: '100%', skPrevZoomLabel: 'Zoom', sketchMoreNote: '', sketchMoreCamLabel: 'Take photo', stepA: false, stepB: false, stepSketch: false, stepDesc: false, stepPhotos: false, stepRisk: false, stepExport: false, stepCheck: false,
     };
     out.credit = `App design and build © ${new Date().getFullYear()} ${this.props.author ?? 'Davide Casagrande'}. Rating tables reproduced from the TfNSW Guide to Slope Risk Analysis v4 (© Transport for NSW).`;
     if (!d) return { ...out, headerTitle: 'New South Wales Slope Risk Assessment', headerSub: 'Loading…' };
@@ -1710,6 +1864,11 @@ class Component extends DCLogic {
 
     // A
     out.fieldsA1 = [fA('siteNo', 'Slope identification no.', { im: 'numeric' }), fA('date', 'Inspection date', { type: 'date' }), fA('time', 'Time', { type: 'time' }), fA('completedBy', 'Completed by'), fA('weather', 'Weather conditions', { span: '1 / -1', ph: 'On and preceding inspection day' }), fA('descr', 'Description', { span: '1 / -1', ph: 'e.g. Rock cutting, sandstone over claystone' }), fA('material', 'Material', { span: '1 / -1', ph: 'e.g. Sandstone / residual clay' })];
+    if (p?.std === 'TS00196') { out.is196 = true; out.isV4 = false; const setA = (k, v) => this.updS(x => { x.A[k] = v; });
+      const chipsA = (k, label, opts) => ({ label, opts: opts.map(o => ({ label: o, cls: A[k] === o ? 'btn-primary' : 'btn-secondary', pick: () => setA(k, A[k] === o ? '' : o) })) });
+      out.a196Chips = [chipsA('inspReason', 'Reason for inspection', ['Routine', 'Emergency response']), chipsA('slopeType', 'Slope type', ['Cutting', 'Embankment', 'Retaining wall', 'Bridge spill-through', 'Natural slope', 'Tunnel portal'])];
+      const fx = (k, label, ph, type = 'text', span = 'auto') => ({ label, placeholder: ph, type, span, value: A[k] ?? '', onChange: e => setA(k, e.target.value) });
+      out.a196Fields = [fx('prevInsp', 'Previous inspection date', '', 'date'), fx('nearest', 'Nearest town / suburb / station', 'e.g. Bulli'), fx('lineName', 'Road name / rail line', 'e.g. Illawarra Line, Princes Highway', 'text', '1 / -1'), fx('refDocs', 'Reference documents (previous reports, drawings, data)', 'e.g. 2023 SIR, design drawings DS2019/001', 'text', '1 / -1')]; }
     out.fieldsGps = [fA('lat1', 'Start latitude'), fA('lon1', 'Start longitude'), fA('ele1', 'Start elevation'), fA('lat2', 'End latitude'), fA('lon2', 'End longitude'), fA('ele2', 'End elevation')];
     out.gpsLabel = st.gps === 'busy' ? 'Locating…' : st.gps === 'end' ? 'Phone GPS → end point' : 'Phone GPS → start point';
     out.gpsNote = st.gps === 'err' ? 'Phone GPS unavailable (denied or no fix) — enter decimal degrees to 5 places; MGA2020 still converts.' : 'Uses the phone GPS. Stand at the start, tap once; walk to the end, tap again. MGA2020 grid is converted automatically.';
@@ -1925,7 +2084,19 @@ class Component extends DCLogic {
     const ux = this.props.ratingUx ?? 'steps';
     out.isSteps = ux === 'steps'; out.isCards = ux === 'cards'; out.isMatrix = ux === 'matrix'; out.notMatrix = ux !== 'matrix';
     const hs = s.hazards || []; const hi = Math.min(st.hzIdx, Math.max(0, hs.length - 1)); const h = hs[hi]; const c = this.compute(h, A);
-    out.hazardTabs = hs.map((x, i) => { const r = this.compute(x, A).ARL; const act = i === hi; return { n: x.n, arl: r || '—', pick: () => this.setState({ hzIdx: i }), bg: r ? this.ARL_BG[r] : 'transparent', fg: r ? this.ARL_FG[r] : 'var(--color-text)', border: act ? 'var(--color-text)' : 'var(--color-divider)', shadow: act ? 'inset 0 -4px 0 var(--color-text)' : 'none' }; });
+    const is196 = p?.std === 'TS00196'; out.is196 = is196; out.isV4 = !is196; const N = window.TS196;
+    const ctx196 = x => ({ speed: (x?.n6?.speed ?? '') !== '' ? +x.n6.speed : +A.speed, length: x?.n6?.len ?? '' });
+    out.openN44 = openRef('N44'); out.openN19 = openRef('N19');
+    if (is196) {
+      const safety = hs.map(x => N.compute(x, ctx196(x)).rating); const ns = s.n6ns || {}; const nsVals = N.NONSAFETY.map(k => ns[k]).filter(Boolean);
+      const ov = N.worst([...safety, ...nsVals]); const ovT = N.termOf(ov); const ws = N.worst(safety);
+      out.ovRating = ov || '—'; out.ovBg = ov ? this.N6_BG[ov] : 'var(--color-surface)'; out.ovFg = ov ? this.N6_FG[ov] : 'var(--color-text)';
+      out.ovLine = ov ? `${ovT.level} · worst of ${hs.length} hazard${hs.length === 1 ? '' : 's'}${nsVals.length ? ` and ${nsVals.length} non-safety rating${nsVals.length === 1 ? '' : 's'}` : ''}${ws && ov !== ws ? ` (safety ${ws})` : ''}` : 'Rate each hazard to get the overall rating';
+      out.ovResp = ov ? `${ovT.resp} Review: ${ovT.review}.` : '';
+      out.nsOpen = !!st.nsOpen || nsVals.length > 0; out.toggleNs = () => this.setState({ nsOpen: !out.nsOpen }); out.nsToggleLabel = out.nsOpen ? 'Hide non-safety ratings' : 'Add non-safety ratings (optional)';
+      out.nsRows = N.NONSAFETY.map(k => ({ label: k, opts: ['—', ...N.RANK].map(r => { const v = r === '—' ? null : r; const act = (ns[k] || null) === v; return { label: r, aria: `${k}: ${r === '—' ? 'not rated' : r}`, cls: act ? 'btn-primary' : 'btn-secondary', pick: () => this.updS(x => { x.n6ns = { ...(x.n6ns || {}) }; if (v) x.n6ns[k] = v; else delete x.n6ns[k]; }) }; }) }));
+    }
+    out.hazardTabs = hs.map((x, i) => { const r = is196 ? N.compute(x, ctx196(x)).rating : this.compute(x, A).ARL; const act = i === hi; return { n: x.n, arl: r || '—', pick: () => this.setState({ hzIdx: i }), bg: r ? (is196 ? this.N6_BG[r] : this.ARL_BG[r]) : 'transparent', fg: r ? (is196 ? this.N6_FG[r] : this.ARL_FG[r]) : 'var(--color-text)', border: act ? 'var(--color-text)' : 'var(--color-divider)', shadow: act ? 'inset 0 -4px 0 var(--color-text)' : 'none' }; });
     out.canAddHazard = hs.length < 8;
     out.addHazard = () => { this.updS(x => { x.hazards.push(this.newHz(x.hazards.length + 1, this.catOf(A))); }); this.setState({ hzIdx: hs.length }); };
     out.hasHazard = !!h;
@@ -1956,6 +2127,72 @@ class Component extends DCLogic {
       ];
       out.openT11 = openRef('T11'); out.openT13 = openRef(h.tMode === 'large' ? 'T14' : 'T13'); out.openT18 = openRef('T18'); out.openT16 = openRef('T16'); out.openT6 = openRef('T6'); out.openT10 = openRef('T10'); out.openT27 = openRef('T27');
       out.ratingFields = fields; out.ratingFieldsMatrixRest = [fields[5]];
+      if (is196) {
+        const n = h.n6 || {}; const setN = fn => setH(y => { y.n6 = { ...(y.n6 || {}) }; fn(y.n6); }); const c6 = N.compute(h, ctx196(h));
+        const chip = (label, act, pick, sup) => ({ label, sup: sup || '', cls: act ? 'btn-primary' : 'btn-secondary', pressed: act ? 'true' : 'false', pick });
+        const card = (label, hint, act, pick, sup) => ({ label, sup: sup || '', hint, pressed: act ? 'true' : 'false', pick, ...this.pal(act) });
+        const ref = (key, label) => ({ open: openRef(key), label });
+        const G = o => ({ hasTitle: !!o.title, isChips: o.type === 'chips', isCards: o.type === 'cards', isInput: o.type === 'input', isText: o.type === 'text', isAction: o.type === 'action', hasHint: !!o.hint, opts: [], ...o });
+        const inp = (k, label, ph, im = 'decimal') => G({ type: 'input', label, ph, im, value: n[k] ?? '', onChange: e => { const v = e.target.value; setN(z => { z[k] = v; }); } });
+        const mode = n.mode; const X = n.X; const cards = [];
+        // 1 element at risk + interaction
+        cards.push({ kicker: `H${h.n} · element at risk and interaction (Section 6.5)`, refs: [ref('N25', 'Figures 4–6')], groups: [
+          G({ type: 'chips', title: 'Element at risk', opts: N.MODES.map(m => chip(m.label, mode === m.k, () => setN(z => { z.mode = m.k; const xs = N.X_TYPES[m.k]; if (!xs.some(xx => xx.k === z.X)) z.X = xs.length === 1 ? xs[0].k : null; if (m.k === 'rail' && !z.T) z.T = 'T1'; }))), hint: mode ? N.MODES.find(m => m.k === mode).hint : 'Who or what the hazard could reach' }),
+          ...(mode ? [G({ type: 'cards', title: 'Spatial interaction type', opts: N.X_TYPES[mode].map(x => card(x.label, x.hint, X === x.k, () => setN(z => { z.X = x.k; }))) })] : []) ] });
+        if (mode && X) {
+          // 2 scale
+          const g2 = [];
+          if (X === 'X3' && mode === 'road') g2.push(G({ type: 'cards', title: 'Depth of void / height of step (Table 23)', opts: N.D.map(d => card(d.k, `${d.label} — ${d.hint}`, n.D === d.k, () => setN(z => { z.D = d.k; }))) }));
+          else if (X === 'X3' && mode === 'rail') g2.push(G({ type: 'cards', title: 'Rail movement category (Table 24)', opts: N.M.map(m => card(m.k, `${m.label} (${m.hint.toLowerCase()})`, n.M === m.k, () => setN(z => { z.M = m.k; }))) }));
+          else {
+            if (mode === 'road' && X === 'X1') g2.push(G({ type: 'chips', title: 'Debris met by the vehicle', opts: [['block', 'Single rock block (Table 32)'], ['mixed', 'Loose or wet mixed soil/rock (Table 33)'], ['small', 'Small rock debris <0.1 m (Table 33)']].map(([k, l]) => chip(l, (n.debris || 'block') === k, () => setN(z => { z.debris = k; }))) }));
+            if (!(mode === 'road' && X === 'X1' && (n.debris === 'mixed' || n.debris === 'small'))) g2.push(G({ type: 'cards', title: 'Scale of hazard S (Table 22)', opts: N.S.map(s => card(s.k, `Volume ${s.vol} · block ${s.block}`, n.S === s.k, () => setN(z => { z.S = s.k; }))), hint: X === 'X4' && mode === 'road' ? 'Table 36 applies only to S1 / R1 large-scale landslides.' : '' }));
+          }
+          if (X === 'X4') g2.push(inp('len', mode === 'rail' ? 'Length of failure (m) — Table 40 modifier' : 'Length of landslide along the road (m) — Table 36', 'e.g. 80'));
+          if (X === 'X2') { g2.push(inp('fallH', 'Fall height above the element at risk (m)', 'e.g. 10')); g2.push(inp('speed', `Speed of element at risk (km/h) — blank uses posted speed${A.speed ? ' ' + A.speed : ''}`, String(A.speed || ''), 'numeric'));
+            g2.push(G({ type: 'text', text: c6.vr ? `Resultant velocity ${c6.v.toFixed(1)} m/s → ${c6.vr} (Vr1 >25 · Vr2 15–25 · Vr3 <15 m/s)` : 'Enter the fall height to get the resultant velocity Vr.' })); }
+          cards.push({ kicker: `H${h.n} · scale of hazard (Section 6.6)`, refs: [ref(X === 'X3' ? (mode === 'rail' ? 'N24' : 'N23') : 'N22', X === 'X3' ? (mode === 'rail' ? 'Table 24' : 'Table 23') : 'Table 22'), ...(X === 'X2' ? [ref('N31', 'Table 31')] : [])], groups: g2 });
+          // 3 velocity + temporal + vulnerability descriptors
+          const g3 = [G({ type: 'chips', title: 'Velocity of failure R (Table 30)', opts: N.R.map(r => chip(r.k, n.R === r.k, () => setN(z => { z.R = r.k; }))), hint: n.R ? `${N.R.find(r => r.k === n.R).label} — ${N.R.find(r => r.k === n.R).hint}` : 'Tap to select' })];
+          const TL = mode === 'road' ? N.T_ROAD : mode === 'rail' ? N.T_RAIL : mode === 'open' ? N.T_OPEN : N.T_BLDG;
+          g3.push(G({ type: 'cards', title: 'Temporal probability T', opts: TL.map(x => card(x.k, `${x.p} · ${x.hint}`, n.T === x.k, () => setN(z => { z.T = x.k; }))) }));
+          if (mode === 'road') { const tv = this.trafficVol(h, A); const sug = N.tFromVol(tv.vol);
+            g3.push(G({ type: 'text', text: tv.vol ? `Traffic: ${Math.round(tv.vol).toLocaleString('en-AU')} vehicles/lane/day ${(h.lanesAff || []).length ? '(lanes reached by the hazard)' : '(average lane — choose the lanes reached in the Guide v4 temporal card if needed)'} → ${sug} (Table 25)` : 'Enter AADT and lanes in A. Location to get a suggestion from Table 25.' }));
+            if (sug && n.T !== sug) g3.push(G({ type: 'action', actLabel: `Use ${sug}`, act: () => setN(z => { z.T = sug; }) })); }
+          if (mode === 'bldg') g3.push(G({ type: 'chips', title: 'NCC building class (Table 29)', opts: N.NCC.map(([k, l, r]) => chip(k, n.ncc === k, () => setN(z => { z.ncc = k; }))), hint: n.ncc ? (([k, l, r]) => `${k}: ${l} → ${r}`)(N.NCC.find(x => x[0] === n.ncc)) : 'Optional: guides the choice of T' }));
+          if (mode === 'open') g3.push(G({ type: 'cards', title: 'Likelihood of evading the debris (Table 41)', opts: [['unable', 'Unable to evade rockfall or other debris', 'R1/R2'], ['may', 'May be able to evade debris', 'R2–R5'], ['most', 'Most people able to avoid debris', 'R2–R5']].map(([k, l, r]) => card(r, l, n.evade === k, () => setN(z => { z.evade = k; }))) }));
+          if (mode === 'bldg') g3.push(G({ type: 'cards', title: 'Indicative impact to the building (Table 42)', opts: [['buried', 'Buried or engulfed in building collapse', 'R1/R2'], ['partial', 'Partial building collapse', 'R1/R2'], ['penetrated', 'Building penetrated, no collapse, emergency evacuation possible', 'Varies'], ['damaged', 'Building struck, damaged but not penetrated', 'Varies'], ['minor', 'Building struck, only minor damage', 'Varies']].map(([k, l, r]) => card(r, l, n.bImpact === k, () => setN(z => { z.bImpact = k; }))) }));
+          cards.push({ kicker: `H${h.n} · velocity and exposure (Sections 6.7, 8.4)`, refs: [ref('N30', 'Table 30'), ref(mode === 'bldg' ? 'N29' : 'N25', mode === 'bldg' ? 'Table 29' : 'Tables 25–27'), ...(mode === 'open' ? [ref('T41', 'Table 41')] : mode === 'bldg' ? [ref('T42', 'Table 42')] : [])], groups: g3 });
+        }
+        // 4 likelihood
+        const pdo = N.PD.map(x => card(x.v === 1 ? '1' : '10', x.cond, h.pd === x.v, () => setH(y => { y.pd = x.v; }), x.sup));
+        const ang = +B.batterA, a0 = +B.a, w0 = +B.w, d0 = +B.d, H0 = +(B.overallH || B.H); let L0 = a0; if (w0 && d0 > w0 / 3) L0 = a0 + (ang <= 65 ? 2 * w0 : w0); const lh = a0 && H0 ? L0 / H0 : null; const ptSug = N.ptFig10(ang, lh);
+        const ptOpts = N.PD.map(x => chip(x.v === 1 ? '1' : '10', h.pt === x.v, () => setH(y => { y.pt = x.v; }), x.sup));
+        const ptx = n.ptx || [];
+        const g4 = [G({ type: 'cards', title: 'Pd · annual probability of the hazard event (Table 8)', opts: pdo, hint: h.pd != null ? (x => `Evidence: ${x.prev}. Progress: ${x.prog}. Trigger: ${x.trig}.`)(N.PD.find(x => x.v === h.pd)) : '' }),
+          G({ type: 'chips', title: 'Pt · probability it reaches the element at risk (Section 7.3)', opts: ptOpts, hint: lh != null ? `Figure 10 (small rock falls/slides): batter ${ang || '?'}°, L/H ${lh.toFixed(2)} → Pt ${ptSug ?? '—'}${ptSug == null ? ' (needs batter angle ≥30°)' : ''}` : 'Enter a, w, d, H and batter angle in B. Geometry to read Pt from Figure 10.' }),
+          ...(ptSug != null && h.pt !== ptSug ? [G({ type: 'action', actLabel: `Use Pt = ${ptSug} from Figure 10`, act: () => setH(y => { y.pt = ptSug; }) })] : []),
+          ...ptx.map((v, i) => G({ type: 'chips', title: `Conditional Pt${i + 2} (Section 7.3.2)`, opts: [...N.PD.slice(0, 4).map(x => chip(x.v === 1 ? '1' : '10', +v === x.v, () => setN(z => { z.ptx = [...(z.ptx || [])]; z.ptx[i] = x.v; }), x.sup)), chip('Remove', false, () => setN(z => { z.ptx = (z.ptx || []).filter((_, j) => j !== i); }))] })),
+          G({ type: 'action', actLabel: '+ Conditional probability (Pt × Pt2 × …)', act: () => setN(z => { z.ptx = [...(z.ptx || []), 0.1]; }) }),
+          inp('ptBasis', 'Basis of the Pt assessment (required in the report)', 'e.g. Figure 10, observed debris to 3 m from toe, CRSP run', 'text'),
+          G({ type: 'text', text: c6.p != null ? `L = Pd × Pt = ${N.fmtP(c6.pd)} × ${N.fmtP(c6.pt)} = ${N.fmtP(c6.p)} → ${c6.L}: ${N.L_BANDS.find(b => b.k === c6.L).hint}` : 'Choose Pd and Pt to get the likelihood L1–L7.' })];
+        cards.push({ kicker: `H${h.n} · likelihood (Section 7)`, refs: [ref('N8', 'Table 8'), ref('N10', 'Figure 10'), ref('N43', 'Table 43')], groups: g4 });
+        // 5 consequence
+        const g5 = [G({ type: 'text', text: c6.CqAuto ? `${c6.CqAuto} ${N.CQ.find(q => q[0] === c6.CqAuto)[1]} — ${c6.why.join(' · ')}` : (c6.why || []).join(' · ') || 'Complete the cards above.' }),
+          G({ type: 'chips', title: 'Override Cq (only with a stated reason)', opts: [chip('Use table', !n.cqOvr, () => setN(z => { z.cqOvr = null; })), ...N.CQ.map(([k]) => chip(k, n.cqOvr === k, () => setN(z => { z.cqOvr = k; })))] }),
+          ...(n.cqOvr ? [inp('cqWhy', 'Reason for the override (Sections 8.4–8.5)', 'e.g. sight distance allows drivers to stop', 'text')] : [])];
+        cards.push({ kicker: `H${h.n} · safety consequence (Section 8, Appendix ${mode === 'rail' ? 'F' : mode === 'road' ? 'E' : 'G'})`, refs: [...(c6.cTable ? [ref(c6.cTable, 'Table ' + c6.cTable.slice(1))] : []), ref('N11', 'Table 11')], groups: g5 });
+        // 6 management
+        cards.push({ kicker: `H${h.n} · mechanism, trigger and remediation`, refs: [ref('N14', 'Table 14')], groups: [
+          G({ type: 'input', label: 'Failure trigger', ph: 'e.g. Rainfall, root jacking, weathering', im: 'text', value: h.trigger ?? '', onChange: e => { const v = e.target.value; setH(y => { y.trigger = v; }); } }),
+          G({ type: 'chips', title: 'Indicative remediation cost to reach D1 or better (Table 14)', opts: N.COST.map(cst => chip(cst.k, n.cost === cst.k, () => setN(z => { z.cost = z.cost === cst.k ? null : cst.k; }))), hint: n.cost ? N.COST.find(cst => cst.k === n.cost).hint : 'Optional' }),
+          inp('options', 'Conceptual risk management and remediation options', 'e.g. Scale loose blocks, install drape mesh, monitor', 'text') ] });
+        out.n6Cards = cards.map(cd => ({ refs: [], ...cd }));
+        const dv = (label, value, sub, key) => ({ label, value: value || '—', sub: sub || '', open: openRef(key) });
+        out.n6Derived = [dv('Pd × Pt', N.fmtP(c6.p), '', 'N43'), dv('Likelihood', c6.L, c6.L ? N.L_BANDS.find(b => b.k === c6.L).range : '', 'N43'), dv('Consequence', c6.Cq, c6.cqOvr ? 'override' : c6.Cq ? N.CQ.find(q => q[0] === c6.Cq)[1] : '', c6.cTable || 'N11'), dv('Interaction', n.X, mode ? N.MODES.find(m => m.k === mode).label : '', 'N25')];
+        out.n6Rating = c6.rating || '—'; out.n6Bg = c6.rating ? this.N6_BG[c6.rating] : 'transparent'; out.n6Fg = c6.rating ? this.N6_FG[c6.rating] : 'var(--color-text)';
+        out.n6Level = c6.term ? `${c6.term.level} (${c6.term.tol})` : 'Table 44'; out.n6Resp = c6.term ? `${c6.term.resp} Review: ${c6.term.review}.` : 'Complete likelihood and consequence to get the rating.';
+      }
       // matrices
       const mxL = { title: `Likelihood · ${c.L || '—'}`, sub: 'Table 10 · rows P(d), columns P(t)', openRef: openRef('T10'), template: `56px repeat(6,minmax(0,1fr))`, colHeads: T.P_STEPS.map(x => ({ label: x.label, sup: x.sup })), hint: c.L ? `${c.L} — ${T.L_HINTS[c.L]}` : 'Tap the P(d) × P(t) cell', rows: T.P_STEPS.map(pdS => ({ label: pdS.label, sup: pdS.sup, cells: T.P_STEPS.map(ptS => { const code = T.likelihoodFrom(pdS.v, ptS.v); const act = h.pd === pdS.v && h.pt === ptS.v; return { label: code, pick: () => setH(y => { y.pd = pdS.v; y.pt = ptS.v; }), ...this.pal(act) }; }) })) };
       const sKey = st.matrixS === 'vol' ? 'sVol' : 'sBlock'; const sList = st.matrixS === 'vol' ? T.S_VOL : T.S_BLOCK;
@@ -2013,7 +2250,15 @@ class Component extends DCLogic {
     out.slopeArlNote = sArl ? (sArl === 'ARL1' || sArl === 'ARL2' ? 'Higher-risk site: 100% audit and SRMP required (Asset Mgmt guideline).' : `${hs.length} hazard${hs.length === 1 ? '' : 's'} assessed`) : 'No hazards rated yet';
     out.hazardRows = hs.map(x => { const k = this.compute(x, A); const dash = v => v || '—'; return { n: x.n, type: x.text || x.mech || '—', ARL: dash(k.ARL), arlBg: k.ARL ? this.ARL_BG[k.ARL] : 'transparent', arlFg: k.ARL ? this.ARL_FG[k.ARL] : 'inherit', codes: [['S', dash(x.sVol || x.sBlock)], ['R', dash(x.r)], ['L', dash(k.L)], ['T', dash(k.T)], ['V', dash(k.V)], ['M', dash(k.M)], ['H', dash(k.H)], ['C', dash(k.Cl || x.cProp)]].map(([kk, vv]) => ({ k: kk, v: vv })) }; });
     const missing = []; if (!A.siteNo) missing.push('site no'); if (!A.aadt && !(A.aadtNote || '').trim()) missing.push('AADT or AADT source note'); if (A.slopeClass === 'Retaining' && /^(Dry stone|Mortared)/.test(A.wallType || '') && !(s.hazards || []).some(x => x.special === 'wall')) missing.push('live-loading check (masonry wall)'); if (!A.lat1) missing.push('GPS start'); if (A.slopeClass === 'Natural' && !A.natSide) missing.push('natural slope above / below'); if (A.slopeClass === 'Retaining' && !A.structSide) missing.push('structure above / below'); if (!this.guideMat(s)) missing.push('material rock / soil'); if (!(A.length || s.B?.lengthCovered)) missing.push('site length'); if (!(A.roadNo && A.startLink && A.startDist !== '' && A.startDist != null)) missing.push('ROADLOC (road no, start link, start distance)'); if (!this.lanesOf(A)) missing.push('no. of lanes'); if (!A.speed) missing.push('speed limit'); if (!A.sight) missing.push('sight distance Y/N'); if ((s.photos || []).filter(p => /\b(end|start|finish)\b/i.test(p.caption || '')).length < 2) missing.push('photos from both ends (captions with start / finish / end)'); if (!s.sketches?.S01?.src) missing.push('plan sketch'); if (!s.sketches?.S02?.src) missing.push('cross-section sketch'); if (!s.photos?.length) missing.push('photos'); hs.forEach(x => { const k = this.compute(x, A); if (!k.ARL) missing.push(`hazard ${x.n} ratings`); }); if (!hs.length) missing.push('at least one hazard');
+    if (is196) { missing.length = 0; const N = window.TS196;
+      if (!A.siteNo) missing.push('asset / slope no'); if (!A.date) missing.push('inspection date'); if (!A.inspReason) missing.push('reason for inspection'); if (!A.slopeType) missing.push('slope type'); if (!A.lat1) missing.push('GPS start'); if (!s.photos?.length) missing.push('photos'); if (!hs.length) missing.push('at least one hazard');
+      hs.forEach(x => { const k = N.compute(x, this.ctx196(s, x)); const n = x.n6 || {}; if (!k.rating) missing.push(`H${x.n} rating`); if (x.pt != null && !(n.ptBasis || '').trim()) missing.push(`H${x.n} Pt basis`); if (n.cqOvr && !(n.cqWhy || '').trim()) missing.push(`H${x.n} reason for Cq override`); }); }
     out.hasMissing = missing.length > 0; out.missingList = missing.join(', ');
+    if (is196) { const N = window.TS196; const ovx = this.overall196(s); out.ovLevel = ovx.level || 'not rated';
+      out.rr196 = hs.map(x => { const k = N.compute(x, this.ctx196(s, x)); const n = x.n6 || {}; const d = v => v || '—'; return { n: `H${x.n}`, type: this.hzName(x) || '—', rating: d(k.rating), bg: k.rating ? this.N6_BG[k.rating] : 'transparent', fg: k.rating ? this.N6_FG[k.rating] : 'inherit',
+        codes: [['X', d(n.X)], ['S/D/M', d(n.S || n.D || n.M)], ['T', d(n.T)], ['Pd×Pt', k.p != null ? N.fmtP(k.p) : '—'], ['L', d(k.L)], ['Cq', d(k.Cq)]].map(([kk, vv]) => ({ k: kk, v: vv })) }; });
+      out.rrLabel = st.rrBusy ? 'Building register…' : 'Download hazard and risk register only (.xlsx)'; out.downloadRR = () => this.dl196('rr');
+      out.sirLabel = st.sirBusy ? 'Building Slope Inspection Report…' : 'Download Slope Inspection Report only (.pdf)'; out.downloadSIR = () => this.dl196('sir'); }
     out.reportRows = (s.reports || []).map((r, i) => ({ n: i + 1, fields: [['author', 'Author', 'Name(s)', 'auto'], ['org', 'Organisation', '', 'auto'], ['title', 'Title', 'Report title', '1 / -1'], ['ref', 'File / Reference No.', 'e.g. NNNNNN_YYYYMMDD_SD.pdf', '1 / -1']].map(([k, label, placeholder, span]) => ({ label, placeholder, span, value: r[k] || '', onChange: e => this.updS(x => { x.reports[i][k] = e.target.value; }) })), remove: () => this.updS(x => { x.reports.splice(i, 1); }) }));
     out.noReports = !(s.reports || []).length; out.canAddReport = (s.reports || []).length < 10;
     out.addReport = () => this.updS(x => { x.reports = x.reports || []; x.reports.push({ author: A.completedBy || p.assessor || '', org: p.org || '', title: '', ref: '' }); });
@@ -2024,6 +2269,7 @@ class Component extends DCLogic {
 
     // Check
     out.checkSummary = [['Slope', `${A.siteNo} · ${A.locality || ''}`], ['Completed by', `${A.completedBy || '—'} · ${A.date || ''}`], ['Hazards', hs.map(x => `${x.n}: ${this.compute(x, A).ARL || '—'}`).join('  ') || '—'], ['AADT', A.aadt ? [A.aadt, (A.aadtNote || '').trim()].filter(Boolean).join(' · ') : ((A.aadtNote || '').trim() || '⚠ Missing — add AADT or a source note in A. Location')], ['Governing ARL', sArl || '—'], ['Attribute score', s.attrScore || score.total]].map(([label, value]) => ({ label, value }));
+    if (is196) { const ovx = this.overall196(s); const N = window.TS196; out.checkSummary = [['Slope', `${A.siteNo || '—'} · ${A.nearest || A.locality || ''}`], ['Inspected by', `${A.completedBy || '—'} · ${A.date || ''}`], ['Reason', A.inspReason || '—'], ['Slope type', A.slopeType || '—'], ['Hazards', hs.map(x => `H${x.n}: ${N.compute(x, this.ctx196(s, x)).rating || '—'}`).join('  ') || '—'], ['Overall rating', ovx.rating ? `${ovx.rating} · ${ovx.level}` : '—'], ['Minimum review', ovx.review || '—']].map(([label, value]) => ({ label, value })); }
     out.goRisk = () => this.setView({ step: 6 });
     out.checkedBy = s.checkedBy || ''; out.setCheckedBy = e => this.upd((nd, np, ns) => { ns.checkedBy = e.target.value; });
     out.checkedDate = s.checkedDate || ''; out.setCheckedDate = e => this.upd((nd, np, ns) => { ns.checkedDate = e.target.value; });
